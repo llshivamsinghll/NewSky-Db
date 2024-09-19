@@ -1,0 +1,101 @@
+-- Create the database
+CREATE DATABASE newskyDb;
+USE newskyDb;
+
+-- Create the 'Location' table
+CREATE TABLE Location (
+    LocationID INT PRIMARY KEY AUTO_INCREMENT,
+    City VARCHAR(255),
+    Country VARCHAR(255),
+    Latitude FLOAT,
+    Longitude FLOAT
+);
+
+-- Create the 'Station' table
+CREATE TABLE Station (
+    StationID INT PRIMARY KEY AUTO_INCREMENT,
+    LocationID INT,
+    StationName VARCHAR(255),
+    CurrentLevel FLOAT,
+    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
+);
+
+-- Create the 'Sensors' table
+CREATE TABLE Sensors (
+    SensorID INT PRIMARY KEY AUTO_INCREMENT,
+    StationID INT,
+    SensorType VARCHAR(255),
+    SensorName VARCHAR(255),
+    Unit VARCHAR(50),
+    FOREIGN KEY (StationID) REFERENCES Station(StationID)
+);
+
+-- Create the 'Readings' table
+CREATE TABLE Readings (
+    ReadingID INT PRIMARY KEY AUTO_INCREMENT,
+    SensorID INT,
+    Timestamp DATETIME,
+    Value FLOAT,
+    FOREIGN KEY (SensorID) REFERENCES Sensors(SensorID)
+);
+
+-- Create the 'Alarms' table
+CREATE TABLE Alarms (
+    AlarmID INT PRIMARY KEY AUTO_INCREMENT,
+    SensorID INT,
+    ThresholdValue FLOAT,
+    AlarmType VARCHAR(255),
+    AlarmStatus VARCHAR(50),
+    FOREIGN KEY (SensorID) REFERENCES Sensors(SensorID)
+);
+
+-- Create the 'User' table
+CREATE TABLE User (
+    UserID INT PRIMARY KEY AUTO_INCREMENT,
+    Username VARCHAR(255),
+    Email VARCHAR(255),
+    LastLogin DATE
+);
+
+-- Create the 'WeatherData' table
+CREATE TABLE WeatherData (
+    WeatherID INT PRIMARY KEY AUTO_INCREMENT,
+    LocationID INT,
+    Timestamp DATETIME,
+    Temperature FLOAT,
+    Humidity FLOAT,
+    WindSpeed FLOAT,
+    Condition VARCHAR(255),
+    Rainfall FLOAT,
+    Snowfall FLOAT,
+    Pressure FLOAT,
+    Visibility FLOAT,
+    SeaLevel FLOAT,
+    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
+);
+
+-- Create the 'Forecast' table
+CREATE TABLE Forecast (
+    ForecastID INT PRIMARY KEY AUTO_INCREMENT,
+    LocationID INT,
+    Date DATE,
+    HighTemp FLOAT,
+    LowTemp FLOAT,
+    Condition VARCHAR(255),
+    PrecipitationProb FLOAT,
+    ExpectedRainfall FLOAT,
+    ExpectedSnowfall FLOAT,
+    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
+);
+
+-- Create the 'WeatherAlert' table
+CREATE TABLE WeatherAlert (
+    AlertID INT PRIMARY KEY AUTO_INCREMENT,
+    LocationID INT,
+    Type VARCHAR(255),
+    Severity VARCHAR(50),
+    StartTime DATETIME,
+    EndTime DATETIME,
+    Description TEXT,
+    FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
+);
